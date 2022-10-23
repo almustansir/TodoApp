@@ -1,3 +1,3 @@
 # TodoApp
 Basic Todo App.
-For multi users.
+For multiple users.
