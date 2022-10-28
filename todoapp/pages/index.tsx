@@ -1,7 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import useAuth from "../hooks/useAuth";
 
 const Home: NextPage = () => {
+  const { logOut } = useAuth();
+
   return (
     <div>
       <Head>
@@ -11,9 +14,11 @@ const Home: NextPage = () => {
       </Head>
 
       <div>
-        <h1 className="text-3xl font-bold underline">
-          hi
-        </h1>
+        <h1 className="text-3xl font-bold underline">hi</h1>
+
+        <button onClick={logOut} className="border">
+          Logout
+        </button>
       </div>
     </div>
   );
