@@ -76,6 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setUser(userCredential.user);
+        // setup user name if possible.
         router.push("/");
         setLoading(false);
       })

@@ -1,9 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { auth } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
 
 const Home: NextPage = () => {
   const { logOut } = useAuth();
+  const user = auth.currentUser;
+  // use update updateProfile() to update. pin any new methodes if found.
 
   return (
     <div>
@@ -15,6 +18,8 @@ const Home: NextPage = () => {
 
       <div>
         <h1 className="text-3xl font-bold underline">hi</h1>
+        <p className="text-2xl">{user?.displayName}</p>
+        <p>{user?.email}</p>
 
         <button onClick={logOut} className="border">
           Logout
