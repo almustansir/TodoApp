@@ -1,12 +1,18 @@
+import { collection, getDocs } from "firebase/firestore";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { auth } from "../firebase.config";
+import { auth, db } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
 
 const Home: NextPage = () => {
   const { logOut } = useAuth();
   const user = auth.currentUser;
   // use update updateProfile() to update. pin any new methodes if found.
+
+  // const querySnapshot = await getDocs(collection(db, "users"));
+  // querySnapshot.forEach((doc) => {
+  //   console.log(`${doc.id} => ${doc.data()}`);
+  // });
 
   return (
     <div>
@@ -20,6 +26,7 @@ const Home: NextPage = () => {
         <h1 className="text-3xl font-bold underline">hi</h1>
         <p className="text-2xl">{user?.displayName}</p>
         <p>{user?.email}</p>
+        <p>{}</p>
 
         <button onClick={logOut} className="border">
           Logout
