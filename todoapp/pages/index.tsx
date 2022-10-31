@@ -30,18 +30,17 @@ const Home: NextPage = () => {
       </Head>
 
       <div>
-        <h1 className="text-3xl font-bold underline">hi</h1>
-        <p className="text-2xl">{user?.displayName}</p>
-        <p>{user?.email}</p>
+        <h1 className="text-3xl font-bold underline">Todos</h1>
         <p>
           {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
           {todosLoading && <span>Collection: Loading...</span>}
           {todos && (
             <span>
-              Collection:{" "}
               <ul>
                 {todos.docs.map((doc) => (
-                  <li key={doc.id}>{JSON.stringify(doc.data().todo)}, </li>
+                  <li className="font-bold" key={doc.id}>
+                    {doc.data().todo}
+                  </li>
                 ))}
               </ul>
             </span>
