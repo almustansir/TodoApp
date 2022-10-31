@@ -1,10 +1,22 @@
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { auth, db } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type FormValues = {
+  addTodo: string;
+};
 
 const Home: NextPage = () => {
   const { logOut } = useAuth();
@@ -21,6 +33,31 @@ const Home: NextPage = () => {
     { snapshotListenOptions: { includeMetadataChanges: true } }
   );
 
+  const { register, handleSubmit, reset } = useForm<FormValues>();
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    // console.log(data.addTodo);
+
+    try {
+      addDoc(collection(db, "Todos"), {
+        todo: data.addTodo,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    // resets the form after submission
+    reset();
+  };
+
+  // const editDecument = (data: any) => {
+  //   console.log(data);
+  // };
+
+  const deleteDecument = (data: any) => {
+    console.log(data);
+    deleteDoc(doc(db, "Todos", data));
+  };
+
   return (
     <div>
       <Head>
@@ -31,21 +68,38 @@ const Home: NextPage = () => {
 
       <div>
         <h1 className="text-3xl font-bold underline">Todos</h1>
-        <p>
+        <form name="addTodoForm" onSubmit={handleSubmit(onSubmit)}>
+          <input
+            type="text"
+            placeholder="Add todos"
+            className=""
+            {...register("addTodo", { required: true })}
+          />
+          <input className=" bg-cyan-500" type="submit" />
+        </form>
+        {/* fix the ul bug */}
+        <ul>
           {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
-          {todosLoading && <span>Collection: Loading...</span>}
-          {todos && (
-            <span>
-              <ul>
-                {todos.docs.map((doc) => (
-                  <li className="font-bold" key={doc.id}>
-                    {doc.data().todo}
-                  </li>
-                ))}
-              </ul>
-            </span>
-          )}
-        </p>
+          {todosLoading && <span>Loading...</span>}
+          {todos &&
+            todos.docs.map((doc) => (
+              <li className="font-bold" key={doc.id}>
+                {doc.data().todo}{" "}
+                {/* <i
+                  className="hover:cursor-pointer"
+                  onClick={() => editDecument(doc.id)}
+                >
+                  Edit
+                </i>{" "} */}
+                <i
+                  className="hover:cursor-pointer"
+                  onClick={() => deleteDecument(doc.id)}
+                >
+                  Delete
+                </i>
+              </li>
+            ))}
+        </ul>
 
         <button onClick={logOut} className="border">
           Logout
