@@ -1,8 +1,10 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { auth, db } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
+import { useCollection } from "react-firebase-hooks/firestore";
+import React from "react";
 
 const Home: NextPage = () => {
   const { logOut } = useAuth();
@@ -13,6 +15,11 @@ const Home: NextPage = () => {
   // querySnapshot.forEach((doc) => {
   //   console.log(`${doc.id} => ${doc.data()}`);
   // });
+
+  const [todos, todosLoading, todoserror] = useCollection(
+    collection(getFirestore(), "Todos"),
+    { snapshotListenOptions: { includeMetadataChanges: true } }
+  );
 
   return (
     <div>
@@ -26,7 +33,20 @@ const Home: NextPage = () => {
         <h1 className="text-3xl font-bold underline">hi</h1>
         <p className="text-2xl">{user?.displayName}</p>
         <p>{user?.email}</p>
-        <p>{}</p>
+        <p>
+          {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
+          {todosLoading && <span>Collection: Loading...</span>}
+          {todos && (
+            <span>
+              Collection:{" "}
+              <ul>
+                {todos.docs.map((doc) => (
+                  <li key={doc.id}>{JSON.stringify(doc.data().todo)}, </li>
+                ))}
+              </ul>
+            </span>
+          )}
+        </p>
 
         <button onClick={logOut} className="border">
           Logout
