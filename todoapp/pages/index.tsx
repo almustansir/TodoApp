@@ -67,6 +67,15 @@ const Home: NextPage = () => {
       </Head>
 
       <div>
+        <nav className=" flex justify-between w-full bg-blue-400 px-6 py-2">
+          <span className=" font-bold text-black-300 text-lg">TodoApp</span>
+          <button
+            onClick={logOut}
+            className="font-bold py-1 px-1 rounded bg-red-500 text-white hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </nav>
         <h1 className="text-3xl font-bold underline">Todos</h1>
         <form name="addTodoForm" onSubmit={handleSubmit(onSubmit)}>
           <input
@@ -75,7 +84,10 @@ const Home: NextPage = () => {
             className=""
             {...register("addTodo", { required: true })}
           />
-          <input className=" bg-cyan-500" type="submit" />
+          <input
+            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          />
         </form>
         {/* fix the ul bug */}
         <ul>
@@ -100,10 +112,6 @@ const Home: NextPage = () => {
               </li>
             ))}
         </ul>
-
-        <button onClick={logOut} className="border">
-          Logout
-        </button>
       </div>
     </div>
   );

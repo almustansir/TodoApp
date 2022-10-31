@@ -26,19 +26,22 @@ const Login = () => {
   };
 
   return (
-    <div className="">
+    <div className=" mx-auto w-[400px] mt-20 md:max-w-md">
       <Head>
         <title>TodoApp | SignIn</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <form onSubmit={handleSubmit(onSubmit)} className="">
-        <h1>Sign In</h1>
-        <div className="">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      >
+        <h1 className=" mb-7 text-center">Sign In</h1>
+        <div className="mb-4">
           <label className="">
             <input
               type="email"
               placeholder="Email"
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               {...register("email", { required: true })}
             />
             {errors.email && (
@@ -47,31 +50,45 @@ const Login = () => {
               </p>
             )}
           </label>
+        </div>
+        <div className="mb-6">
           <label className="">
             <input
               type="password"
               placeholder="Password"
-              className=""
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <p className="">
+              <p className="p-1 text-[13px] font-light  text-orange-500">
                 Your password must contain between 4 and 60 characters.
               </p>
             )}
           </label>
         </div>
-
-        <button type="submit" className="" onClick={() => setLogin(true)}>
-          Sign In
-        </button>
-        <div className="">
-          New to Netflix?{" "}
-          <button type="submit" className="" onClick={() => setLogin(false)}>
-            Sign up now
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => setLogin(true)}
+          >
+            Sign In
           </button>
+          <div className="inline-block align-baseline font-bold text-sm">
+            New to Netflix?{" "}
+            <button
+              type="submit"
+              className=" text-blue-500 hover:text-blue-800"
+              onClick={() => setLogin(false)}
+            >
+              Sign up now
+            </button>
+          </div>
         </div>
       </form>
+      <p className="text-center text-gray-500 text-xs">
+        &copy;2022 Samit_08. All rights reserved.
+      </p>
     </div>
   );
 };
