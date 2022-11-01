@@ -3,9 +3,10 @@
 Basic Todo App.
 For multiple users online.
 
-todo:
+Features in Development:
 
-1. Make 2 forms for signup and login.
-2. Display 'Username'.
-3. Edit data.
-4. Design with tailwind.
+1. User Information.
+2. seperate signup and loggin pages.
+3. User specific tasks.
+4. Editing data from todos.
+5. Teams and team based tasks.

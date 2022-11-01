@@ -3,7 +3,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   getFirestore,
 } from "firebase/firestore";
 import type { NextPage } from "next";
@@ -13,6 +12,7 @@ import useAuth from "../hooks/useAuth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type FormValues = {
   addTodo: string;
@@ -76,42 +76,53 @@ const Home: NextPage = () => {
             Logout
           </button>
         </nav>
-        <h1 className="text-3xl font-bold underline">Todos</h1>
-        <form name="addTodoForm" onSubmit={handleSubmit(onSubmit)}>
-          <input
-            type="text"
-            placeholder="Add todos"
-            className=""
-            {...register("addTodo", { required: true })}
-          />
-          <input
-            className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          />
-        </form>
-        {/* fix the ul bug */}
-        <ul>
-          {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
-          {todosLoading && <span>Loading...</span>}
-          {todos &&
-            todos.docs.map((doc) => (
-              <li className="font-bold" key={doc.id}>
-                {doc.data().todo}{" "}
-                {/* <i
+        <div className=" text-center w-[400px] md:w-[540px] shadow-md mx-auto py-8 mt-10">
+          <h1 className="text-3xl font-bold mb-7">Todos</h1>
+          <form
+            className=" mb-6 w-full"
+            name="addTodoForm"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="flex items-center border-b border-blue-500 py-2">
+              <input
+                type="text"
+                placeholder="Add todos"
+                className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                {...register("addTodo", { required: true })}
+              />
+              <input
+                className=" bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline flex-shrink-0 border-blue-500 hover:border-blue-700 text-sm border-4 py-1 px-2"
+                type="submit"
+              />
+            </div>
+          </form>
+          {/* fix the ul bug */}
+          <ul>
+            {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
+            {todosLoading && <span>Loading...</span>}
+            {todos &&
+              todos.docs.map((doc) => (
+                <li
+                  className="font-bold flex justify-between mx-12 my-2"
+                  key={doc.id}
+                >
+                  {doc.data().todo}
+                  {/* <i
                   className="hover:cursor-pointer"
                   onClick={() => editDecument(doc.id)}
                 >
                   Edit
                 </i>{" "} */}
-                <i
-                  className="hover:cursor-pointer"
-                  onClick={() => deleteDecument(doc.id)}
-                >
-                  Delete
-                </i>
-              </li>
-            ))}
-        </ul>
+                  <i
+                    className="hover:cursor-pointer"
+                    onClick={() => deleteDecument(doc.id)}
+                  >
+                    <TrashIcon className="h-6 w-6 text-red-500" />
+                  </i>
+                </li>
+              ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
