@@ -107,18 +107,20 @@ const Home: NextPage = () => {
                   key={doc.id}
                 >
                   {doc.data().todo}
-                  <i
-                    className="hover:cursor-pointer"
-                    onClick={() => editDecument(doc.id)}
-                  >
-                    <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
-                  </i>{" "}
-                  <i
-                    className="hover:cursor-pointer"
-                    onClick={() => deleteDecument(doc.id)}
-                  >
-                    <TrashIcon className="h-6 w-6 text-red-400 hover:text-red-700" />
-                  </i>
+                  <div className=" flex justify-between">
+                    <i
+                      className="hover:cursor-pointer"
+                      onClick={() => editDecument(doc.id)}
+                    >
+                      <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
+                    </i>{" "}
+                    <i
+                      className="hover:cursor-pointer"
+                      onClick={() => deleteDecument(doc.id)}
+                    >
+                      <TrashIcon className="h-6 w-6 text-red-400 hover:text-red-700" />
+                    </i>
+                  </div>
                 </li>
               ))}
           </ul>
