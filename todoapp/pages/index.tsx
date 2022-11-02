@@ -49,9 +49,9 @@ const Home: NextPage = () => {
     reset();
   };
 
-  // const editDecument = (data: any) => {
-  //   console.log(data);
-  // };
+  const editDecument = (data: any) => {
+    console.log(data);
+  };
 
   const deleteDecument = (data: any) => {
     console.log(data);
@@ -107,12 +107,12 @@ const Home: NextPage = () => {
                   key={doc.id}
                 >
                   {doc.data().todo}
-                  {/* <i
-                  className="hover:cursor-pointer"
-                  onClick={() => editDecument(doc.id)}
-                >
-                  Edit
-                </i>{" "} */}
+                  <i
+                    className="hover:cursor-pointer"
+                    onClick={() => editDecument(doc.id)}
+                  >
+                    Edit
+                  </i>{" "}
                   <i
                     className="hover:cursor-pointer"
                     onClick={() => deleteDecument(doc.id)}
