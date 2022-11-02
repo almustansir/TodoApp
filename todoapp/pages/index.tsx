@@ -12,7 +12,7 @@ import useAuth from "../hooks/useAuth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 type FormValues = {
   addTodo: string;
@@ -111,13 +111,13 @@ const Home: NextPage = () => {
                     className="hover:cursor-pointer"
                     onClick={() => editDecument(doc.id)}
                   >
-                    Edit
+                    <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
                   </i>{" "}
                   <i
                     className="hover:cursor-pointer"
                     onClick={() => deleteDecument(doc.id)}
                   >
-                    <TrashIcon className="h-6 w-6 text-red-500" />
+                    <TrashIcon className="h-6 w-6 text-red-400 hover:text-red-700" />
                   </i>
                 </li>
               ))}
