@@ -4,15 +4,20 @@ import {
   deleteDoc,
   doc,
   getFirestore,
+  setDoc,
 } from "firebase/firestore";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { auth, db } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
 import { useCollection } from "react-firebase-hooks/firestore";
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 
 type FormValues = {
   addTodo: string;
@@ -20,23 +25,30 @@ type FormValues = {
 
 const Home: NextPage = () => {
   const { logOut } = useAuth();
+  const [editTracker, setEditTracker] = useState<boolean>(false);
+  const [editDocId, setEditDocId] = useState("");
+  const [data, setData] = useState<FormValues>();
+  const [editDoc, setEditDoc] = useState("");
   const user = auth.currentUser;
-  // use update updateProfile() to update. pin any new methodes if found.
-
-  // const querySnapshot = await getDocs(collection(db, "users"));
-  // querySnapshot.forEach((doc) => {
-  //   console.log(`${doc.id} => ${doc.data()}`);
-  // });
 
   const [todos, todosLoading, todoserror] = useCollection(
     collection(getFirestore(), "Todos"),
     { snapshotListenOptions: { includeMetadataChanges: true } }
   );
 
+  const editTodo = (data: FormValues, editDoc: string) => {
+    const docRef = doc(db, "Todos", editDoc);
+    setDoc(docRef, data)
+      .then(() => {
+        console.log("Entire Document has been updated successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // console.log(data.addTodo);
-
     try {
       addDoc(collection(db, "Todos"), {
         todo: data.addTodo,
@@ -44,17 +56,24 @@ const Home: NextPage = () => {
     } catch (e) {
       console.log(e);
     }
-
     // resets the form after submission
     reset();
   };
 
-  const editDecument = (data: any) => {
-    console.log(data);
+  // calling edit form
+  const editDecumentKeyFunction = (docId: string) => {
+    setEditDocId(docId);
+    setEditTracker(true);
+  };
+
+  const editDocument: SubmitHandler<FormValues> = (data) => {
+    console.log("something...");
+    console.log(data.addTodo);
+    reset();
   };
 
   const deleteDecument = (data: any) => {
-    console.log(data);
+    console.log(data.editTodo);
     deleteDoc(doc(db, "Todos", data));
   };
 
@@ -78,11 +97,7 @@ const Home: NextPage = () => {
         </nav>
         <div className=" text-center w-[400px] md:w-[540px] shadow-md mx-auto py-8 mt-10">
           <h1 className="text-3xl font-bold mb-7">Todos</h1>
-          <form
-            className=" mb-6 w-full"
-            name="addTodoForm"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className=" mb-6 w-full" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center border-b border-blue-500 py-2">
               <input
                 type="text"
@@ -93,35 +108,61 @@ const Home: NextPage = () => {
               <input
                 className=" bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline flex-shrink-0 border-blue-500 hover:border-blue-700 text-sm border-4 py-1 px-2"
                 type="submit"
+                value="Add Todo"
               />
             </div>
           </form>
-          {/* fix the ul bug */}
           <ul>
             {todoserror && <strong>Error: {JSON.stringify(todoserror)}</strong>}
             {todosLoading && <span>Loading...</span>}
+            {editTracker && (
+              <form
+                className="flex justify-center items-center"
+                onSubmit={handleSubmit(editDocument)}
+              >
+                <input
+                  type="text"
+                  placeholder="Edit Todo"
+                  className=" border-b border-blue-400 mr-3 hover:border-blue-800 focus:outline-none focus:border-blue-800 focus:border-b"
+                  {...register("addTodo", { required: true })}
+                  name="todo"
+                />
+                <input
+                  className=" bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline flex-shrink-0 border-blue-500 hover:border-blue-700 text-sm border-4 py-1 px-1"
+                  type="submit"
+                  value="Edit"
+                />
+                <button onClick={() => setEditTracker(false)}>
+                  <XCircleIcon className="h-8 w-8 text-red-400 hover:text-red-700 pt-2" />
+                </button>
+              </form>
+            )}
             {todos &&
               todos.docs.map((doc) => (
-                <li
-                  className="font-bold flex justify-between mx-12 my-2"
-                  key={doc.id}
-                >
-                  {doc.data().todo}
-                  <div className=" flex justify-between">
-                    <i
-                      className="hover:cursor-pointer"
-                      onClick={() => editDecument(doc.id)}
+                <div>
+                  <div>
+                    <div
+                      className="font-bold flex justify-between mx-12 my-2"
+                      key={doc.id}
                     >
-                      <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
-                    </i>{" "}
-                    <i
-                      className="hover:cursor-pointer"
-                      onClick={() => deleteDecument(doc.id)}
-                    >
-                      <TrashIcon className="h-6 w-6 text-red-400 hover:text-red-700" />
-                    </i>
+                      {doc.data().todo}
+                      <div className=" flex justify-between w-20">
+                        <i
+                          className="hover:cursor-pointer"
+                          onClick={() => editDecumentKeyFunction(doc.id)}
+                        >
+                          <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
+                        </i>{" "}
+                        <i
+                          className="hover:cursor-pointer"
+                          onClick={() => deleteDecument(doc.id)}
+                        >
+                          <TrashIcon className="h-6 w-6 text-red-400 hover:text-red-700" />
+                        </i>
+                      </div>
+                    </div>
                   </div>
-                </li>
+                </div>
               ))}
           </ul>
         </div>
