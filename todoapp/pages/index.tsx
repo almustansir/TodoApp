@@ -11,7 +11,7 @@ import Head from "next/head";
 import { auth, db } from "../firebase.config";
 import useAuth from "../hooks/useAuth";
 import { useCollection } from "react-firebase-hooks/firestore";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import {
   PencilSquareIcon,
@@ -29,18 +29,19 @@ type FormValuesEdit = {
 const Home: NextPage = () => {
   const { logOut } = useAuth();
   const [editTracker, setEditTracker] = useState<boolean>(false);
+  const [tempTodo, setTempTodo] = useState<string>("")
   const [editDocId, setEditDocId] = useState("");
-  const [editData,setEditData] = useState<FormValues>()
   const [data, setData] = useState<FormValues>();
   const [editDoc, setEditDoc] = useState("");
   const user = auth.currentUser;
+  // const editInputRef = useRef<>(null);
   const [editedValue, setEditedValue] = useState<string>("")
-
   const [todos, todosLoading, todoserror] = useCollection(
     collection(getFirestore(), "Todos"),
     { snapshotListenOptions: { includeMetadataChanges: true } }
   );
 
+  // todo update function
   const editTodo = (data: FormValuesEdit, editDoc: string) => {
     const docRef = doc(db, "Todos", editDoc);
     console.log(data);
@@ -66,11 +67,20 @@ const Home: NextPage = () => {
     // resets the form after submission
     reset();
   };
+  
+  // const focusEdit = () => {
+  //     // editInputRef.current.focus()
+  //       const editInput: HTMLElement | null = document.querySelector('input[name="editTodo"]')
+  //       editInput?.focus()
+  //   }
 
-  // calling edit form
+    // calling edit form
   const editDecumentKeyFunction = (docId: string) => {
     setEditDocId(docId);
+    // setup temp todo for edit value
+    todos?.docs.map((doc) => {doc.id == docId && (setTempTodo(doc.data().todo));
     setEditTracker(true);
+  })
   };
 
   // calls editing function
@@ -131,7 +141,10 @@ const Home: NextPage = () => {
             >
               <input
                 type="text"
-                placeholder="Edit Todo"
+                name="editTodo"
+                // default value doesn't reset on clicking another edit icon.
+                defaultValue={tempTodo}
+                
                 className=" border-b border-blue-400 mr-3 hover:border-blue-800 focus:outline-none focus:border-blue-800 focus:border-b"
                 onChange={(e) => setEditedValue(e.target.value)}
               />
