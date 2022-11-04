@@ -29,13 +29,13 @@ type FormValuesEdit = {
 const Home: NextPage = () => {
   const { logOut } = useAuth();
   const [editTracker, setEditTracker] = useState<boolean>(false);
-  const [tempTodo, setTempTodo] = useState<string>("")
+  const [tempTodo, setTempTodo] = useState<string>("");
   const [editDocId, setEditDocId] = useState("");
   const [data, setData] = useState<FormValues>();
   const [editDoc, setEditDoc] = useState("");
   const user = auth.currentUser;
   // const editInputRef = useRef<>(null);
-  const [editedValue, setEditedValue] = useState<string>("")
+  const [editedValue, setEditedValue] = useState<string>("");
   const [todos, todosLoading, todoserror] = useCollection(
     collection(getFirestore(), "Todos"),
     { snapshotListenOptions: { includeMetadataChanges: true } }
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
   const editTodo = (data: FormValuesEdit, editDoc: string) => {
     const docRef = doc(db, "Todos", editDoc);
     console.log(data);
-    
+
     setDoc(docRef, data)
       .then(() => {
         console.log("Entire Document has been updated successfully");
@@ -67,32 +67,32 @@ const Home: NextPage = () => {
     // resets the form after submission
     reset();
   };
-  
+
   // const focusEdit = () => {
   //     // editInputRef.current.focus()
   //       const editInput: HTMLElement | null = document.querySelector('input[name="editTodo"]')
   //       editInput?.focus()
   //   }
 
-    // calling edit form
+  // calling edit form
   const editDecumentKeyFunction = (docId: string) => {
     setEditDocId(docId);
     // setup temp todo for edit value
-    todos?.docs.map((doc) => {doc.id == docId && (setTempTodo(doc.data().todo));
-    setEditTracker(true);
-  })
+    todos?.docs.map((doc) => {
+      doc.id == docId && setTempTodo(doc.data().todo);
+      setEditTracker(true);
+    });
   };
 
   // calls editing function
-  const editDocument=(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    editTodo({todo: editedValue}, editDocId)
-    setEditedValue("")
-    setEditTracker(false)
+  const editDocument = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    editTodo({ todo: editedValue }, editDocId);
+    setEditedValue("");
+    setEditTracker(false);
   };
 
   const deleteDecument = (data: any) => {
-    console.log(data.editTodo);
     deleteDoc(doc(db, "Todos", data));
   };
 
@@ -136,27 +136,26 @@ const Home: NextPage = () => {
             {todosLoading && <span>Loading...</span>}
             {editTracker && (
               <form
-              className="flex justify-center items-center"
-              onSubmit={(e) => editDocument(e)}
-            >
-              <input
-                type="text"
-                name="editTodo"
-                // default value doesn't reset on clicking another edit icon.
-                defaultValue={tempTodo}
-                
-                className=" border-b border-blue-400 mr-3 hover:border-blue-800 focus:outline-none focus:border-blue-800 focus:border-b"
-                onChange={(e) => setEditedValue(e.target.value)}
-              />
-              <input
-                className=" bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline flex-shrink-0 border-blue-500 hover:border-blue-700 text-sm border-4 py-1 px-1"
-                type="submit"
-                value="Edit"
-              />
-              <button onClick={() => setEditTracker(false)}>
-                <XCircleIcon className="h-8 w-8 text-red-400 hover:text-red-700 pt-2" />
-              </button>
-            </form>
+                className="flex justify-center items-center"
+                onSubmit={(e) => editDocument(e)}
+              >
+                <input
+                  type="text"
+                  name="editTodo"
+                  // default value doesn't reset on clicking another edit icon.
+                  defaultValue={tempTodo}
+                  className=" border-b border-blue-400 mr-3 hover:border-blue-800 focus:outline-none focus:border-blue-800 focus:border-b"
+                  onChange={(e) => setEditedValue(e.target.value)}
+                />
+                <input
+                  className=" bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline flex-shrink-0 border-blue-500 hover:border-blue-700 text-sm border-4 py-1 px-1"
+                  type="submit"
+                  value="Edit"
+                />
+                <button onClick={() => setEditTracker(false)}>
+                  <XCircleIcon className="h-8 w-8 text-red-400 hover:text-red-700 pt-2" />
+                </button>
+              </form>
             )}
             {todos &&
               todos.docs.map((doc) => (
