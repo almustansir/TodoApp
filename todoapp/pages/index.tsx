@@ -41,30 +41,34 @@ const Home: NextPage = () => {
     { snapshotListenOptions: { includeMetadataChanges: true } }
   );
 
-
   const editDocFlag = (docId: string) => {
-    setEditTracker(!editTracker)
-    
-    if(editTracker === true) {
-      editDecumentKeyFunction(docId)
+    setEditTracker(!editTracker);
+
+    if (editTracker === true) {
+      editDecumentKeyFunction(docId);
     } else {
-      setTempTodo("")
+      setTempTodo("");
     }
-  }
- 
+  };
+
   const editDecumentKeyFunction = (docId: string) => {
     setEditDocId(docId);
     // setup temp todo for edit value
-    todos?.docs.map((doc) => {
+    // todos?.docs.map((doc) => {
+    //   const key = doc.id;
+    //   doc.id == docId && setTempTodo(doc.data().todo);
+    //   setEditTracker(true);
+    // });
+    todos?.docs.forEach((doc) => {
       doc.id == docId && setTempTodo(doc.data().todo);
-      setEditTracker(true);
     });
+    setEditTracker(true);
   };
 
   // todo update function
   const editTodo = (data: FormValuesEdit, editDoc: string) => {
     const docRef = doc(db, "Todos", editDoc);
-    console.log(data);
+    // console.log(data);
 
     setDoc(docRef, data)
       .then(() => {
