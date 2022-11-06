@@ -41,6 +41,26 @@ const Home: NextPage = () => {
     { snapshotListenOptions: { includeMetadataChanges: true } }
   );
 
+
+  const editDocFlag = (docId: string) => {
+    setEditTracker(!editTracker)
+    
+    if(editTracker === true) {
+      editDecumentKeyFunction(docId)
+    } else {
+      setTempTodo("")
+    }
+  }
+ 
+  const editDecumentKeyFunction = (docId: string) => {
+    setEditDocId(docId);
+    // setup temp todo for edit value
+    todos?.docs.map((doc) => {
+      doc.id == docId && setTempTodo(doc.data().todo);
+      setEditTracker(true);
+    });
+  };
+
   // todo update function
   const editTodo = (data: FormValuesEdit, editDoc: string) => {
     const docRef = doc(db, "Todos", editDoc);
@@ -75,14 +95,6 @@ const Home: NextPage = () => {
   //   }
 
   // calling edit form
-  const editDecumentKeyFunction = (docId: string) => {
-    setEditDocId(docId);
-    // setup temp todo for edit value
-    todos?.docs.map((doc) => {
-      doc.id == docId && setTempTodo(doc.data().todo);
-      setEditTracker(true);
-    });
-  };
 
   // calls editing function
   const editDocument = (e: React.FormEvent<HTMLFormElement>) => {
@@ -169,7 +181,8 @@ const Home: NextPage = () => {
                       <div className=" flex justify-between w-20">
                         <i
                           className="hover:cursor-pointer"
-                          onClick={() => editDecumentKeyFunction(doc.id)}
+                          // onClick={() => editDecumentKeyFunction(doc.id)}
+                          onClick={() => editDocFlag(doc.id)}
                         >
                           <PencilSquareIcon className="h-6 w-6 text-gray-400 hover:text-gray-800" />
                         </i>{" "}
