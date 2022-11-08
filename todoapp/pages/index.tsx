@@ -141,12 +141,9 @@ const Home: NextPage = () => {
             )}
             {todos &&
               todos.docs.map((doc) => (
-                <div>
+                <div key={doc.id}>
                   <div>
-                    <div
-                      className="font-bold flex justify-between mx-12 my-2"
-                      key={doc.id}
-                    >
+                    <div className="font-bold flex justify-between mx-12 my-2">
                       {doc.data().todo}
                       <div className=" flex justify-between w-20">
                         <i
