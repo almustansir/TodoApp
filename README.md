@@ -1,7 +1,7 @@
 # TodoApp
 
 Basic Todo App.
-For multiple users online.
+will be updated for multiple users online.
 
 Features in Development:
 
