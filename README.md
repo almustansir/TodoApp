@@ -9,3 +9,5 @@ Features in Development:
 2. Separate signup and loggin pages.
 3. User specific tasks.
 4. Teams and team based tasks.
+
+**Work in progress**
